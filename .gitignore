@@ -1,0 +1,139 @@
+# ============================================================
+# db-utils — .gitignore
+# ============================================================
+# Build outputs — Maven
+# ============================================================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven build artifacts
+pom.xml.tag
+pom.xml.releaseBackup
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ============================================================
+# IDE Configuration Files
+# ============================================================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+.IntelliJ*
+
+# Eclipse
+.classpath
+.project
+.settings/
+*.launch
+.checkstyle
+.externalToolBuilders/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+.sublime-workspace
+.sublime-project
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.tmTheme.cache
+*.tmLanguage.cache
+
+# Vim / Neovim
+.vim/
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Others
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# ============================================================
+# Runtime & Logs
+# ============================================================
+logs/
+*.log
+*.log.*
+
+# ============================================================
+# User-Placed Resources
+# ============================================================
+# User must place JDBC drivers (e.g., Oracle ojdbc11.jar) in this directory
+# See CLAUDE.md for instructions
+drivers/
+
+# User configuration — local overrides not to be committed
+.bd-utils.json
+~/.bd-utils/
+
+# ============================================================
+# OS-Specific Files
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ============================================================
+# Temporary Files
+# ============================================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+.~*
+
+# ============================================================
+# Package Manager Caches (unlikely in Java/Maven, but exclude just in case)
+# ============================================================
+.m2/
+node_modules/
+.npm
+.gradle/
+
+# ============================================================
+# Generated Documentation
+# ============================================================
+# Exclude generated HTML / Javadoc (docs/ contains source specs, but exclude build outputs if any)
+*.min.css
+*.min.js
+dist/
+build/
+out/
+
+# ============================================================
+# CI/CD Artifacts
+# ============================================================
+.github/workflows/.cache/
+.gitlab-ci.yml.cache/
+
+# ============================================================
+# Local development artifacts (IDE-generated, temporary)
+# ============================================================
+.classpath.local
+.factorypath
+.gradle.properties
+.gradle.wrapper.properties
