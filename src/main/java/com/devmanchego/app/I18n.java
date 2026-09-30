@@ -2,6 +2,7 @@ package com.devmanchego.app;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.prefs.Preferences;
 
 /**
  * Simple internationalization helper.
@@ -15,9 +16,22 @@ public final class I18n {
         Lang(String n) { this.displayName = n; }
     }
 
-    private static Lang current = Lang.EN;
+    private static final Preferences PREFS =
+            Preferences.userNodeForPackage(I18n.class);
+    private static final String PREF_LANG = "language";
+
+    private static Lang current = loadInitialLang();
     private static final List<Runnable> listeners = new ArrayList<>();
     private static final Map<Lang, Map<String, String>> T = new EnumMap<>(Lang.class);
+
+    private static Lang loadInitialLang() {
+        String name = PREFS.get(PREF_LANG, Lang.ES.name());
+        try {
+            return Lang.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            return Lang.ES;
+        }
+    }
 
     static {
         // ── English ──────────────────────────────────────────────────────────
@@ -146,6 +160,12 @@ public final class I18n {
         en.put("welcome.2players",           "2 Players");
         en.put("welcome.difficulty",         "Difficulty:");
         en.put("welcome.dontshow",           "Don't show this again");
+        en.put("menu.view",                  "View");
+        en.put("menu.fontsize",              "Font Size");
+        en.put("fontsize.small",             "Small");
+        en.put("fontsize.medium",            "Medium");
+        en.put("fontsize.large",             "Large");
+        en.put("fontsize.xlarge",            "Extra Large");
         T.put(Lang.EN, en);
 
         // ── Spanish ───────────────────────────────────────────────────────────
@@ -274,6 +294,12 @@ public final class I18n {
         es.put("difficulty.medium",          "Media        (~1200 ELO)");
         es.put("difficulty.hard",            "Difícil      (~1700 ELO)");
         es.put("difficulty.expert",          "Experto      (~1900 ELO)");
+        es.put("menu.view",                  "Vista");
+        es.put("menu.fontsize",              "Tamaño de Fuente");
+        es.put("fontsize.small",             "Pequeña");
+        es.put("fontsize.medium",            "Normal");
+        es.put("fontsize.large",             "Grande");
+        es.put("fontsize.xlarge",            "Muy Grande");
         T.put(Lang.ES, es);
 
         // ── French ────────────────────────────────────────────────────────────
@@ -402,6 +428,12 @@ public final class I18n {
         fr.put("difficulty.medium",          "Moyen       (~1200 ELO)");
         fr.put("difficulty.hard",            "Difficile   (~1700 ELO)");
         fr.put("difficulty.expert",          "Expert      (~1900 ELO)");
+        fr.put("menu.view",                  "Affichage");
+        fr.put("menu.fontsize",              "Taille de Police");
+        fr.put("fontsize.small",             "Petite");
+        fr.put("fontsize.medium",            "Moyenne");
+        fr.put("fontsize.large",             "Grande");
+        fr.put("fontsize.xlarge",            "Très Grande");
         T.put(Lang.FR, fr);
 
         // ── German ────────────────────────────────────────────────────────────
@@ -530,6 +562,12 @@ public final class I18n {
         de.put("difficulty.medium",          "Mittel      (~1200 ELO)");
         de.put("difficulty.hard",            "Schwer      (~1700 ELO)");
         de.put("difficulty.expert",          "Experte     (~1900 ELO)");
+        de.put("menu.view",                  "Ansicht");
+        de.put("menu.fontsize",              "Schriftgröße");
+        de.put("fontsize.small",             "Klein");
+        de.put("fontsize.medium",            "Mittel");
+        de.put("fontsize.large",             "Groß");
+        de.put("fontsize.xlarge",            "Sehr Groß");
         T.put(Lang.DE, de);
 
         // ── Italian ───────────────────────────────────────────────────────────
@@ -658,6 +696,12 @@ public final class I18n {
         it.put("difficulty.medium",          "Medio        (~1200 ELO)");
         it.put("difficulty.hard",            "Difficile    (~1700 ELO)");
         it.put("difficulty.expert",          "Esperto      (~1900 ELO)");
+        it.put("menu.view",                  "Visualizza");
+        it.put("menu.fontsize",              "Dimensione Carattere");
+        it.put("fontsize.small",             "Piccolo");
+        it.put("fontsize.medium",            "Medio");
+        it.put("fontsize.large",             "Grande");
+        it.put("fontsize.xlarge",            "Molto Grande");
         T.put(Lang.IT, it);
     }
 
@@ -671,6 +715,7 @@ public final class I18n {
 
     public static void setLanguage(Lang lang) {
         current = lang;
+        PREFS.put(PREF_LANG, lang.name());
         listeners.forEach(Runnable::run);
     }
 

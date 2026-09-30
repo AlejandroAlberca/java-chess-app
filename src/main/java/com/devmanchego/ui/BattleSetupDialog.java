@@ -1,5 +1,6 @@
 package com.devmanchego.ui;
 
+import com.devmanchego.app.FontScale;
 import com.devmanchego.app.I18n;
 import com.devmanchego.engine.GameState.BattleType;
 
@@ -29,7 +30,7 @@ public class BattleSetupDialog extends JDialog {
 
         // ── Title ────────────────────────────────────────────────────────────
         JLabel title = new JLabel(battleName(type), SwingConstants.CENTER);
-        title.setFont(new Font("Serif", Font.BOLD, 20));
+        title.setFont(new Font("Serif", Font.BOLD, FontScale.scale(20)));
         title.setForeground(new Color(240, 200, 80));
         root.add(title, BorderLayout.NORTH);
 
@@ -70,7 +71,7 @@ public class BattleSetupDialog extends JDialog {
 
         // VS label
         JLabel vs = new JLabel(I18n.get("battle.dialog.vs"), SwingConstants.CENTER);
-        vs.setFont(new Font("Arial", Font.BOLD, 11));
+        vs.setFont(new Font("Arial", Font.BOLD, FontScale.scale(11)));
         vs.setForeground(new Color(140, 140, 140));
         vs.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -81,7 +82,7 @@ public class BattleSetupDialog extends JDialog {
 
         JLabel colorLbl = new JLabel(I18n.get("battle.dialog.color"));
         colorLbl.setForeground(new Color(200, 200, 200));
-        colorLbl.setFont(new Font("Arial", Font.PLAIN, 14));
+        colorLbl.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(14)));
 
         final boolean[] playerIsWhite = {true};
 
@@ -109,7 +110,7 @@ public class BattleSetupDialog extends JDialog {
 
         // Start button
         JButton startBtn = new JButton(I18n.get("battle.dialog.start"));
-        startBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        startBtn.setFont(new Font("Arial", Font.BOLD, FontScale.scale(14)));
         startBtn.setBackground(new Color(60, 160, 80));
         startBtn.setForeground(Color.WHITE);
         startBtn.setFocusPainted(false);
@@ -142,7 +143,7 @@ public class BattleSetupDialog extends JDialog {
     private static JToggleButton makeSideCard(String title, String desc, Color bg) {
         JToggleButton b = new JToggleButton(
                 "<html><center><b>" + title + "</b><br><small>" + desc + "</small></center></html>");
-        b.setFont(new Font("Arial", Font.PLAIN, 12));
+        b.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(12)));
         b.setBackground(bg);
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
@@ -159,7 +160,7 @@ public class BattleSetupDialog extends JDialog {
 
     private static JToggleButton makeColorToggle(String text, Color bg, Color fg) {
         JToggleButton b = new JToggleButton(text);
-        b.setFont(new Font("Arial", Font.BOLD, 13));
+        b.setFont(new Font("Arial", Font.BOLD, FontScale.scale(13)));
         b.setBackground(bg);
         b.setForeground(fg);
         b.setFocusPainted(false);

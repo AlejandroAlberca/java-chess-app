@@ -91,6 +91,53 @@
 
             </plugin>
 
+            <!-- Windows .exe launcher. It does NOT bundle a JRE: it looks for an
+                 installed JDK on the target machine (registry / JAVA_HOME / PATH)
+                 and refuses to start if none is found, pointing the user to
+                 downloadUrl instead. Runs after the shade plugin so it wraps the
+                 already-built fat jar. -->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>l4j-chess-exe</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+                            <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+                            <errTitle>DevManchego Chess</errTitle>
+                            <downloadUrl>https://adoptium.net/temurin/releases/?version=17</downloadUrl>
+                            <classPath>
+                                <mainClass>com.devmanchego.app.ChessApp</mainClass>
+                            </classPath>
+                            <jre>
+                                <!-- No <path> configured on purpose: launch4j must locate a
+                                     JDK already present on the machine, never bundle one. -->
+                                <minVersion>17.0.0</minVersion>
+                                <requiresJdk>true</requiresJdk>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>1.0.0.0</txtFileVersion>
+                                <fileDescription>DevManchego Chess</fileDescription>
+                                <copyright>2025 DevManchego</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>1.0.0.0</txtProductVersion>
+                                <productName>DevManchego Chess</productName>
+                                <internalName>DevManchegoChess</internalName>
+                                <originalFilename>${project.build.finalName}.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

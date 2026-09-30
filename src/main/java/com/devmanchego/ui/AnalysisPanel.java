@@ -1,5 +1,6 @@
 package com.devmanchego.ui;
 
+import com.devmanchego.app.FontScale;
 import com.devmanchego.app.I18n;
 import com.devmanchego.engine.AnalysisResult;
 import com.devmanchego.engine.AnalysisResult.MoveQuality;
@@ -67,7 +68,7 @@ public class AnalysisPanel extends JPanel {
         north.add(Box.createVerticalStrut(4));
 
         // ── CENTRE LEFT: PV ──────────────────────────────────────────────────
-        pvArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        pvArea.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
         pvArea.setEditable(false);
         pvArea.setBackground(new Color(55, 55, 55));
         pvArea.setForeground(Color.LIGHT_GRAY);
@@ -116,7 +117,7 @@ public class AnalysisPanel extends JPanel {
         centrePanel.add(capturedWrapper);
 
         // ── SOUTH: game move history ──────────────────────────────────────────
-        gameHistArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        gameHistArea.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
         gameHistArea.setEditable(false);
         gameHistArea.setBackground(new Color(45, 45, 45));
         gameHistArea.setForeground(new Color(180, 210, 255));
@@ -137,6 +138,8 @@ public class AnalysisPanel extends JPanel {
         add(north,           BorderLayout.NORTH);
         add(centrePanel,     BorderLayout.CENTER);
         add(gameHistWrapper, BorderLayout.SOUTH);
+
+        FontScale.addChangeListener(this::refreshFonts);
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
@@ -199,6 +202,25 @@ public class AnalysisPanel extends JPanel {
         engineLabel.setText(I18n.get("analysis.engine") + " — " + text);
     }
 
+    /** Re-applies all explicit fonts using the current FontScale level. */
+    public void refreshFonts() {
+        engineLabel.setFont(new Font("Arial", Font.BOLD, FontScale.scale(13)));
+        depthLabel.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
+        scoreLabel.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
+        pvTitle.setFont(new Font("Arial", Font.BOLD, FontScale.scale(12)));
+        pvArea.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
+        capturedTitle.setFont(new Font("Arial", Font.BOLD, FontScale.scale(12)));
+        capturedWhiteLabel.setFont(new Font("Arial", Font.BOLD, FontScale.scale(11)));
+        capturedBlackLabel.setFont(new Font("Arial", Font.BOLD, FontScale.scale(11)));
+        gameHistTitle.setFont(new Font("Arial", Font.BOLD, FontScale.scale(12)));
+        gameHistArea.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
+        historyPanel.revalidate();
+        capturedWhitePanel.revalidate();
+        capturedBlackPanel.revalidate();
+        revalidate();
+        repaint();
+    }
+
     public void refreshTexts() {
         engineLabel.setText(I18n.get("analysis.engine"));
         if (depthLabel.getText().contains("—"))
@@ -251,14 +273,14 @@ public class AnalysisPanel extends JPanel {
 
     private static JLabel label(String text, int style, int size) {
         JLabel l = new JLabel(text);
-        l.setFont(new Font("Arial", style, size));
+        l.setFont(new Font("Arial", style, FontScale.scale(size)));
         l.setForeground(Color.LIGHT_GRAY);
         return l;
     }
 
     private static JLabel mono(String text) {
         JLabel l = new JLabel(text);
-        l.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        l.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
         l.setForeground(Color.LIGHT_GRAY);
         return l;
     }
@@ -271,13 +293,12 @@ public class AnalysisPanel extends JPanel {
 
         CapturedPiecesPanel() {
             setBackground(new Color(50, 50, 50));
-            setPreferredSize(new Dimension(0, 52));
-            setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
             setBorder(new EmptyBorder(4, 4, 4, 4));
         }
 
         void setPieces(List<PieceType> p) {
             this.pieces = new ArrayList<>(p);
+            revalidate();
             repaint();
         }
 
@@ -286,7 +307,7 @@ public class AnalysisPanel extends JPanel {
             super.paintComponent(g);
             if (pieces.isEmpty()) {
                 g.setColor(new Color(130, 130, 130));
-                g.setFont(new Font("Arial", Font.PLAIN, 12));
+                g.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(12)));
                 g.drawString(I18n.get("captured.none"), 6, 20);
                 return;
             }
@@ -294,7 +315,7 @@ public class AnalysisPanel extends JPanel {
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             // Draw pieces as Unicode chess symbols, two rows max
-            int size = 20;
+            int size = FontScale.scale(20);
             int gap  = 2;
             int x = 4, y = size + 2;
             int maxW = getWidth() - 8;
@@ -307,6 +328,12 @@ public class AnalysisPanel extends JPanel {
                 if (x + size > maxW) { x = 4; y += size + gap; }
             }
         }
+
+        @Override
+        public Dimension getPreferredSize() { return new Dimension(0, FontScale.scale(52)); }
+
+        @Override
+        public Dimension getMaximumSize() { return new Dimension(Integer.MAX_VALUE, FontScale.scale(52)); }
 
         private static String symbol(PieceType t) {
             return switch (t) {
@@ -326,10 +353,12 @@ public class AnalysisPanel extends JPanel {
 
         MoveHistoryPanel() {
             setBackground(new Color(40, 40, 40));
-            setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
         }
 
-        void refresh() { repaint(); }
+        void refresh() { revalidate(); repaint(); }
+
+        @Override
+        public Dimension getMaximumSize() { return new Dimension(Integer.MAX_VALUE, FontScale.scale(120)); }
 
         @Override
         protected void paintComponent(Graphics g) {
@@ -338,7 +367,7 @@ public class AnalysisPanel extends JPanel {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             int w = getWidth();
-            int dotSize = 12, gap = 4, colW = w / 2 - 8;
+            int dotSize = FontScale.scale(12), gap = 4, colW = w / 2 - 8;
 
             drawPlayerRow(g2, I18n.get("history.white"), whiteHistory,  4,   0, colW, dotSize, gap);
             drawPlayerRow(g2, I18n.get("history.black"), blackHistory, w/2,  0, colW, dotSize, gap);
@@ -347,12 +376,12 @@ public class AnalysisPanel extends JPanel {
         private void drawPlayerRow(Graphics2D g2, String title,
                                    List<MoveQuality> history,
                                    int x, int y, int maxW, int dotSize, int gap) {
-            g2.setFont(new Font("Arial", Font.BOLD, 11));
+            g2.setFont(new Font("Arial", Font.BOLD, FontScale.scale(11)));
             g2.setColor(Color.LIGHT_GRAY);
             g2.drawString(title, x, y + 14);
 
             String acc = history.isEmpty() ? "—" : accuracy(history) + "%";
-            g2.setFont(new Font("Arial", Font.PLAIN, 11));
+            g2.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(11)));
             g2.setColor(Color.GRAY);
             g2.drawString(I18n.get("history.accuracy", acc), x, y + 28);
 
@@ -378,10 +407,11 @@ public class AnalysisPanel extends JPanel {
 
         @Override
         public Dimension getPreferredSize() {
+            double rowH = FontScale.scale(12) + 4; // dotSize + gap, matches drawPlayerRow
             int rows = Math.max(
-                (int) Math.ceil(whiteHistory.size() * 16.0 / Math.max(1, getWidth() / 2 - 8)),
-                (int) Math.ceil(blackHistory.size() * 16.0 / Math.max(1, getWidth() / 2 - 8)));
-            return new Dimension(0, 50 + rows * 16);
+                (int) Math.ceil(whiteHistory.size() * rowH / Math.max(1, getWidth() / 2 - 8)),
+                (int) Math.ceil(blackHistory.size() * rowH / Math.max(1, getWidth() / 2 - 8)));
+            return new Dimension(0, FontScale.scale(50) + (int) Math.round(rows * rowH));
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.devmanchego.ui;
 
+import com.devmanchego.app.FontScale;
 import com.devmanchego.app.I18n;
 import com.devmanchego.engine.AnalysisResult;
 import com.devmanchego.engine.ChessAI;
@@ -60,7 +61,7 @@ public class EnginePanel extends JPanel {
 
         // Row 3: status
         statusLabel.setForeground(Color.LIGHT_GRAY);
-        statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        statusLabel.setFont(new Font("Arial", Font.ITALIC, FontScale.scale(12)));
         add(statusLabel);
 
         stopBtn.setEnabled(false);
@@ -70,6 +71,15 @@ public class EnginePanel extends JPanel {
             stopRequested = true;
             setStatus(I18n.get("engine.status.stopped"));
         });
+
+        FontScale.addChangeListener(this::refreshFonts);
+    }
+
+    /** Re-applies explicit fonts using the current FontScale level. */
+    private void refreshFonts() {
+        statusLabel.setFont(new Font("Arial", Font.ITALIC, FontScale.scale(12)));
+        revalidate();
+        repaint();
     }
 
     public void setOnResult(Consumer<AnalysisResult> cb) { this.onResult = cb; }

@@ -1,5 +1,7 @@
 package com.devmanchego.ui;
 
+import com.devmanchego.app.FontScale;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,9 +20,15 @@ public class MoveListPanel extends JPanel {
         setLayout(new BorderLayout());
 
         area.setEditable(false);
-        area.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        area.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
 
         add(new JScrollPane(area), BorderLayout.CENTER);
+
+        FontScale.addChangeListener(() -> {
+            area.setFont(new Font("Monospaced", Font.PLAIN, FontScale.scale(12)));
+            revalidate();
+            repaint();
+        });
     }
 
     public void addMove(String move) {
