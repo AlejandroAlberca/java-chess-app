@@ -1,5 +1,6 @@
 package com.devmanchego.ui;
 
+import com.devmanchego.app.FontScale;
 import com.devmanchego.app.I18n;
 import com.devmanchego.engine.AnalysisResult;
 import com.devmanchego.engine.ChessAI;
@@ -60,6 +61,8 @@ public class ChessBoardUI extends JPanel {
         this.gameStatusLabel = gameStatusLabel;
 
         setPreferredSize(new Dimension(640, 640));
+
+        FontScale.addChangeListener(this::repaint);
 
         addMouseListener(new MouseAdapter() {
 
@@ -421,7 +424,7 @@ public class ChessBoardUI extends JPanel {
     }
     
     private void drawCoordinates(Graphics g) {
-        Font font = new Font("Arial", Font.BOLD, 14);
+        Font font = new Font("Arial", Font.BOLD, FontScale.scale(14));
         g.setFont(font);
         FontMetrics fm = g.getFontMetrics();
 
@@ -502,7 +505,7 @@ public class ChessBoardUI extends JPanel {
         if (lastAnalysis.cpLoss > 0)
             text += "  −" + lastAnalysis.cpLoss + " cp";
 
-        Font font = new Font("Arial", Font.BOLD, 14);
+        Font font = new Font("Arial", Font.BOLD, FontScale.scale(14));
         g2.setFont(font);
         FontMetrics fm = g2.getFontMetrics();
 

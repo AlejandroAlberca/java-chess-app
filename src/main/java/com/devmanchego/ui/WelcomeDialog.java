@@ -1,5 +1,6 @@
 package com.devmanchego.ui;
 
+import com.devmanchego.app.FontScale;
 import com.devmanchego.app.I18n;
 import com.devmanchego.engine.ChessAI;
 
@@ -37,7 +38,7 @@ public class WelcomeDialog extends JDialog {
 
         // ── Title ────────────────────────────────────────────────────────────
         JLabel title = new JLabel("♟  DevManchego Chess", SwingConstants.CENTER);
-        title.setFont(new Font("Serif", Font.BOLD, 24));
+        title.setFont(new Font("Serif", Font.BOLD, FontScale.scale(24)));
         title.setForeground(new Color(240, 200, 80));
         title.setBorder(new EmptyBorder(0, 0, 6, 0));
         root.add(title, BorderLayout.NORTH);
@@ -51,7 +52,7 @@ public class WelcomeDialog extends JDialog {
 
         // Subtitle
         JLabel subtitle = new JLabel(I18n.get("welcome.subtitle"), SwingConstants.CENTER);
-        subtitle.setFont(new Font("Arial", Font.PLAIN, 15));
+        subtitle.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(15)));
         subtitle.setForeground(new Color(200, 200, 200));
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         center.add(subtitle);
@@ -82,7 +83,7 @@ public class WelcomeDialog extends JDialog {
 
         JLabel diffLabel = new JLabel(I18n.get("welcome.difficulty"));
         diffLabel.setForeground(new Color(200, 200, 200));
-        diffLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        diffLabel.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(14)));
 
         ChessAI.Difficulty[] diffs = ChessAI.Difficulty.values();
         String[] diffNames = new String[diffs.length];
@@ -91,7 +92,7 @@ public class WelcomeDialog extends JDialog {
 
         JComboBox<String> diffCombo = new JComboBox<>(diffNames);
         diffCombo.setSelectedIndex(3); // default: Hard
-        diffCombo.setFont(new Font("Arial", Font.PLAIN, 13));
+        diffCombo.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(13)));
         diffCombo.setPreferredSize(new Dimension(200, 28));
 
         diffRow.add(diffLabel);
@@ -103,7 +104,7 @@ public class WelcomeDialog extends JDialog {
 
         JLabel colorLabel = new JLabel(I18n.get("welcome.color"));
         colorLabel.setForeground(new Color(200, 200, 200));
-        colorLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        colorLabel.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(14)));
 
         // Two toggle buttons for White / Black
         final boolean[] playerIsWhite = {true};
@@ -146,7 +147,7 @@ public class WelcomeDialog extends JDialog {
         JCheckBox dontShow = new JCheckBox(I18n.get("welcome.dontshow"));
         dontShow.setOpaque(false);
         dontShow.setForeground(new Color(160, 160, 160));
-        dontShow.setFont(new Font("Arial", Font.PLAIN, 12));
+        dontShow.setFont(new Font("Arial", Font.PLAIN, FontScale.scale(12)));
         dontShow.setAlignmentX(Component.CENTER_ALIGNMENT);
         dontShow.setVisible(showDontAskAgain);
         center.add(Box.createVerticalStrut(showDontAskAgain ? 14 : 6));
@@ -175,7 +176,7 @@ public class WelcomeDialog extends JDialog {
     private static JButton makeButton(String text, String icon, Color bg) {
         JButton b = new JButton("<html><center><span style='font-size:18pt'>"
                 + icon + "</span><br>" + text + "</center></html>");
-        b.setFont(new Font("Arial", Font.BOLD, 13));
+        b.setFont(new Font("Arial", Font.BOLD, FontScale.scale(13)));
         b.setBackground(bg);
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
@@ -193,7 +194,7 @@ public class WelcomeDialog extends JDialog {
 
     private static JToggleButton makeColorToggle(String text, Color bg, Color fg) {
         JToggleButton b = new JToggleButton(text);
-        b.setFont(new Font("Arial", Font.BOLD, 13));
+        b.setFont(new Font("Arial", Font.BOLD, FontScale.scale(13)));
         b.setBackground(bg);
         b.setForeground(fg);
         b.setFocusPainted(false);

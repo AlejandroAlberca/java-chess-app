@@ -26,7 +26,7 @@ public class ChessApp {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             JLabel gameStatusLabel = new JLabel(I18n.get("status.white.move"));
-            gameStatusLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            gameStatusLabel.setFont(new Font("Arial", Font.BOLD, FontScale.scale(18)));
 
             GameState game   = new GameState();
             ChessAI   gameAI = new ChessAI(false); // default: AI plays black
@@ -211,6 +211,24 @@ public class ChessApp {
                 item.addActionListener(e -> I18n.setLanguage(lang));
                 langMenu.add(item);
             }
+
+            // View menu (font size)
+            JMenu viewMenu = new JMenu(I18n.get("menu.view"));
+            JMenu fontSizeMenu = new JMenu(I18n.get("menu.fontsize"));
+            ButtonGroup fontSizeGroup = new ButtonGroup();
+            FontScale.Level[] fontLevels = FontScale.Level.values();
+            JRadioButtonMenuItem[] fontSizeItems = new JRadioButtonMenuItem[fontLevels.length];
+            for (int i = 0; i < fontLevels.length; i++) {
+                FontScale.Level level = fontLevels[i];
+                String key = "fontsize." + level.name().toLowerCase();
+                JRadioButtonMenuItem item = new JRadioButtonMenuItem(I18n.get(key));
+                item.setSelected(level == FontScale.getLevel());
+                fontSizeGroup.add(item);
+                fontSizeItems[i] = item;
+                item.addActionListener(e -> FontScale.setLevel(level));
+                fontSizeMenu.add(item);
+            }
+            viewMenu.add(fontSizeMenu);
 
             // Game menu
             JMenu gameMenu = new JMenu(I18n.get("menu.game"));
@@ -446,8 +464,15 @@ public class ChessApp {
             menuBar.add(fileMenu);
             menuBar.add(gameMenu);
             menuBar.add(trainingMenu);
+            menuBar.add(viewMenu);
             menuBar.add(langMenu);
             frame.setJMenuBar(menuBar);
+
+            // Base (unscaled) menu font, captured once from the Look & Feel defaults
+            // so repeated scale changes always derive from the same starting point.
+            Font baseMenuFont = UIManager.getFont("MenuItem.font");
+            if (baseMenuFont == null) baseMenuFont = menuBar.getFont();
+            applyMenuFontScale(menuBar, baseMenuFont);
 
             // Refresh game menu texts on language change
             I18n.addChangeListener(() -> {
@@ -462,6 +487,10 @@ public class ChessApp {
                 undo2turns.setText(I18n.get("menu.undo.2turns"));
                 undo5turns.setText(I18n.get("menu.undo.5turns"));
                 undo10turns.setText(I18n.get("menu.undo.10turns"));
+                viewMenu.setText(I18n.get("menu.view"));
+                fontSizeMenu.setText(I18n.get("menu.fontsize"));
+                for (int i = 0; i < fontLevels.length; i++)
+                    fontSizeItems[i].setText(I18n.get("fontsize." + fontLevels[i].name().toLowerCase()));
             });
 
             // ── Language change listener ──────────────────────────────────────
@@ -478,6 +507,15 @@ public class ChessApp {
                 enginePanel.refreshTexts();
                 analysis.refreshTexts();
                 board.refreshStatus();
+            });
+
+            // ── Font scale change listener ────────────────────────────────────
+            Font finalBaseMenuFont = baseMenuFont;
+            FontScale.addChangeListener(() -> {
+                gameStatusLabel.setFont(new Font("Arial", Font.BOLD, FontScale.scale(18)));
+                applyMenuFontScale(menuBar, finalBaseMenuFont);
+                frame.revalidate();
+                frame.repaint();
             });
 
             frame.add(main, BorderLayout.CENTER);
@@ -509,5 +547,20 @@ public class ChessApp {
                 board.maybeStartAI();
             }
         });
+    }
+
+    /**
+     * Recursively applies the current FontScale to every menu, menu item and
+     * submenu reachable from {@code element}, always deriving from the pristine
+     * {@code base} font so repeated scale changes never compound.
+     */
+    private static void applyMenuFontScale(MenuElement element, Font base) {
+        Component c = element.getComponent();
+        if (c != null) {
+            c.setFont(base.deriveFont((float) FontScale.scale(base.getSize())));
+        }
+        for (MenuElement sub : element.getSubElements()) {
+            applyMenuFontScale(sub, base);
+        }
     }
 }
